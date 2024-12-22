@@ -3,14 +3,16 @@ package com.example.filmfusion.models;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
+import com.example.filmfusion.BookMarkMovies;
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
 import java.util.List;
 
 @Entity(tableName = "now_playing_movies")
-public class NowPlayingModel {
-    @PrimaryKey
-    private int id;
+public class NowPlayingModel  implements BookMarkMovies {
+    @PrimaryKey(autoGenerate = true)
+    private int ids;
 
     @SerializedName("adult")
     private boolean adult;
@@ -18,7 +20,8 @@ public class NowPlayingModel {
     @SerializedName("backdrop_path")
     private String backdropPath;
 
-
+    @SerializedName("id")
+    private int id;
 
     @SerializedName("original_language")
     private String originalLanguage;
@@ -50,6 +53,8 @@ public class NowPlayingModel {
     @SerializedName("vote_count")
     private int voteCount;
 
+    private boolean isBookmarked= false;
+
     // Getters and Setters
     public int getId() {
         return id;
@@ -57,6 +62,23 @@ public class NowPlayingModel {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    // Getters and Setters
+    public boolean isBookmarked() {
+        return isBookmarked;
+    }
+
+    public void setBookmarked(boolean bookmarked) {
+        isBookmarked = bookmarked;
+    }
+
+    public int getIds() {
+        return ids;
+    }
+
+    public void setIds(int ids) {
+        this.ids = ids;
     }
 
     public boolean isAdult() {
@@ -110,6 +132,11 @@ public class NowPlayingModel {
 
     public String getPosterPath() {
         return posterPath;
+    }
+
+    @Override
+    public String getType() {
+        return "Now_Playing";
     }
 
     public void setPosterPath(String posterPath) {

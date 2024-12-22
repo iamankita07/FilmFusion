@@ -1,14 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+
+    <TextView
+        android:id="@+id/wishList"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="WishList"
+        android:textStyle="bold"
+        android:padding="10dp"
+        android:layout_gravity="right">
+
+    </TextView>
+
+    <EditText
+        android:id="@+id/searchBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Search movies..."
+        android:padding="12dp"
+        android:layout_margin="8dp"
+        android:drawablePadding="8dp"
+        android:inputType="text" />
+
+    <LinearLayout
+        android:id="@+id/main_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="visible"
+        android:orientation="horizontal">
 
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_marginTop="30dp"
         android:fillViewport="true">
 
         <LinearLayout
@@ -56,6 +87,32 @@
                 android:nestedScrollingEnabled="false" />
 
         </LinearLayout>
-    </androidx.core.widget.NestedScrollView>
 
-</androidx.coordinatorlayout.widget.CoordinatorLayout>
+    </androidx.core.widget.NestedScrollView>
+</LinearLayout>
+
+     <LinearLayout
+         android:id="@+id/search_layout"
+         android:layout_width="match_parent"
+         android:orientation="horizontal"
+         android:visibility="gone"
+         android:layout_height="match_parent">
+
+         <androidx.recyclerview.widget.RecyclerView
+             android:id="@+id/searchRecycler_view"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent"></androidx.recyclerview.widget.RecyclerView>
+
+         <TextView
+             android:id="@+id/noResultsTextView"
+             android:layout_width="wrap_content"
+             android:layout_height="wrap_content"
+             android:text="No results found"
+             android:visibility="gone"
+             android:layout_centerInParent="true"/>
+
+     </LinearLayout>
+
+
+
+</LinearLayout>

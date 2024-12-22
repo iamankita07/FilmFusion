@@ -19,17 +19,54 @@ public class MoviewViewModel extends ViewModel {
         this.repository = repository;
     }
 
+    // Expose Local Database LiveData
     public LiveData<List<NowPlayingModel>> getNowPlayingMovies() {
-        if (nowPlayingMovies == null) {
-            nowPlayingMovies = repository.getNowPlayingMovies();
-        }
-        return nowPlayingMovies;
+        return repository.getNowPlayingMovies();
     }
 
     public LiveData<List<TrendingMovieModel>> getTrendingMovies() {
-        if (trendingMovies == null) {
-            trendingMovies = repository.getTrendingMovies();
-        }
-        return trendingMovies;
+        return repository.getTrendingMovies();
     }
+
+    // Trigger API fetch if needed
+    public void fetchMoviesFromApi() {
+        repository.fetchNowPlayingMoviesFromApi();
+    }
+
+
+    public void updateBookmarkStatus(int movieId, boolean isBookmarked) {
+        repository.updateNowPlayingBookmarkStatus(movieId, isBookmarked);
+    }
+
+    public LiveData<List<NowPlayingModel>> getBookmarkedMovies() {
+        return repository.getBookmarkedNowPlayingMovies();
+
+    }
+
+    public LiveData<List<NowPlayingModel>> removeBookmarkNowPlaying(int movieId) {
+        return repository.removeBookmarkNowPlaying(movieId);
+
+    }
+
+    public void updateTrendingBookmarkStatus(int movieId, boolean isBookmarked) {
+        repository.updateTrendingBookmarkStatus(movieId, isBookmarked);
+    }
+
+    public LiveData<List<TrendingMovieModel>> getBookmarkedTrendingMovies() {
+        return repository.getBookmarkedTrendingMovies();
+    }
+
+    public LiveData<List<TrendingMovieModel>> removeBookmarkTrending(int movieId) {
+        return repository.removeBookmarkTrending(movieId);
+
+    }
+
+    public LiveData<List<CombineMovies>> searchLocalMovies(String query) {
+        return repository.searchLocalMovies(query);
+    }
+
+
+
+
+
 }

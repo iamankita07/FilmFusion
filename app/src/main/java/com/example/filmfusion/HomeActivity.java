@@ -1,8 +1,15 @@
 package com.example.filmfusion;
 
+import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
+import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
@@ -10,21 +17,29 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 
 import com.example.filmfusion.adapter.MovieAdapter;
+import com.example.filmfusion.adapter.SearchAdapter;
 import com.example.filmfusion.adapter.TrendingMovieAdapter;
+import com.example.filmfusion.adapter.WishListAdapter;
 import com.example.filmfusion.models.ApiServices;
+import com.example.filmfusion.models.CombineMovies;
 import com.example.filmfusion.models.MoviewViewModel;
 import com.example.filmfusion.models.MoviewViewModelFactory;
 import com.example.filmfusion.models.NowPlayingModel;
 import com.example.filmfusion.models.TrendingMovieModel;
 import com.example.filmfusion.repository.MovieRepository;
+import com.example.filmfusion.roomdatabase.DatabaseClient;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import retrofit2.Retrofit;
@@ -39,30 +54,108 @@ public class HomeActivity extends AppCompatActivity {
     private List<TrendingMovieModel> trendingMovies;
 
     private TrendingMovieAdapter trendingMoviewAdapter;
+    private List<CombineMovies> combinedMoviesList = new ArrayList<>();
+
+    private SearchAdapter movieAdapter;
+
+    TextView wishList;
+    private EditText searchBar;
+    private List<NowPlayingModel> filteredNowPlayingMovies = new ArrayList<>();
+    private List<TrendingMovieModel> filteredTrendingMovies = new ArrayList<>();
+
+    LinearLayout search_layout, main_layout;
+
+    RecyclerView searchRecycler_view;
+
+    TextView noResultsTextView;
+
+    Context context;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
         assignId();
+        setupSearchBar();
 
     }
 
+    private void setupSearchBar() {
+        searchBar.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                filterMovies(s.toString());
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {}
+        });
+    }
+
+
+    private void filterMovies(String query) {
+        if (query.isEmpty()) {
+            main_layout.setVisibility(View.VISIBLE);
+            search_layout.setVisibility(View.GONE);
+        }else {
+            List<CombineMovies> filteredMovies = new ArrayList<>();
+            for (CombineMovies movie : combinedMoviesList) {
+                if (movie.getTitle().toLowerCase().contains(query.toLowerCase())) {
+                    filteredMovies.add(movie);
+                }
+            }
+            if (filteredMovies.isEmpty()) {
+                search_layout.setVisibility(View.VISIBLE);
+                searchRecycler_view.setVisibility(View.GONE);
+                noResultsTextView.setVisibility(View.VISIBLE);
+            } else {
+                search_layout.setVisibility(View.VISIBLE);
+                searchRecycler_view.setVisibility(View.VISIBLE);
+                noResultsTextView.setVisibility(View.GONE);
+            }
+
+            main_layout.setVisibility(View.GONE);
+            search_layout.setVisibility(View.VISIBLE);
+            searchRecycler_view.setAdapter(movieAdapter);
+            movieAdapter.setMovies(filteredMovies);
+        }
+
+
+    }
     private void assignId() {
+        context=this;
         recycler_now_playing=findViewById(R.id.recycler_now_playing);
         recycler_trending=findViewById(R.id.recycler_trending);
         now_playing_title=findViewById(R.id.now_playing_title);
         trending_title=findViewById(R.id.trending_title);
+        searchRecycler_view=findViewById(R.id.searchRecycler_view);
+        wishList=findViewById(R.id.wishList);
+        main_layout=findViewById(R.id.main_layout);
+        main_layout.setVisibility(View.VISIBLE);
+        search_layout=findViewById(R.id.search_layout);
+        search_layout.setVisibility(View.GONE);
+        searchBar = findViewById(R.id.searchBar);
+        noResultsTextView=findViewById(R.id.noResultsTextView);
+
 
         recycler_now_playing.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
         recycler_trending.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
-        adapter = new MovieAdapter();
+        GridLayoutManager layoutManager = new GridLayoutManager(this, 2); // 2 items per row
+        layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        searchRecycler_view.setLayoutManager(layoutManager);
+        adapter = new MovieAdapter(null);
         trendingMoviewAdapter = new TrendingMovieAdapter();
+        movieAdapter=new SearchAdapter(context,combinedMoviesList);
         recycler_now_playing.setAdapter(adapter);
         recycler_trending.setAdapter(trendingMoviewAdapter);
+        searchRecycler_view.setAdapter(movieAdapter);
         getNowPlayingMovie();
         getTrendingVideos();
         onClickListener();
+        setupViewModel();
     }
 
     private void onClickListener() {
@@ -95,6 +188,14 @@ public class HomeActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+        wishList.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(HomeActivity.this, WishListActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 
     private void getNowPlayingMovie() {
@@ -106,7 +207,7 @@ public class HomeActivity extends AppCompatActivity {
                 .create(ApiServices.class);
 
         // Assuming you have a MovieDao setup for Room DB
-        MovieRepository repository = new MovieRepository(apiService);
+        MovieRepository repository = new MovieRepository(getApplicationContext(),apiService);
 
 
         // Create an instance of MoviewViewModel using the custom factory
@@ -114,13 +215,50 @@ public class HomeActivity extends AppCompatActivity {
         viewModel = new ViewModelProvider(this, factory).get(MoviewViewModel.class);
 
 
-
         viewModel.getNowPlayingMovies().observe(this, movies -> {
-            if (movies != null) {
+            if (movies != null && !movies.isEmpty()) {
+                // Show movies from the local database
                 adapter.setMovies(movies);
                 nowPlayingMovies = movies;
+            } else {
+                // If no data in the database, fetch from API
+                fetchNowPlayingFromApi(repository);
             }
         });
+    }
+
+    private void setupViewModel() {
+        ApiServices apiService = new Retrofit.Builder()
+                .baseUrl("https://api.themoviedb.org/3/")
+                .addConverterFactory(GsonConverterFactory.create())
+                .build()
+                .create(ApiServices.class);
+
+        MovieRepository repository = new MovieRepository(getApplicationContext(), apiService);
+        MoviewViewModelFactory factory = new MoviewViewModelFactory(repository);
+        viewModel = new ViewModelProvider(this, factory).get(MoviewViewModel.class);
+
+        // Observe Now Playing and Trending movies
+        viewModel.getNowPlayingMovies().observe(this, nowPlayingMovies -> {
+            if (nowPlayingMovies != null) {
+                for (NowPlayingModel movie : nowPlayingMovies) {
+                    combinedMoviesList.add(new CombineMovies(movie.getId(), movie.getTitle(), "Now Playing"));
+                }
+                movieAdapter.setMovies(combinedMoviesList);
+            }
+        });
+
+        viewModel.getTrendingMovies().observe(this, trendingMovies -> {
+            if (trendingMovies != null) {
+                for (TrendingMovieModel movie : trendingMovies) {
+                    combinedMoviesList.add(new CombineMovies(movie.getId(), movie.getTitle(), "Trending"));
+                }
+                movieAdapter.setMovies(combinedMoviesList);
+            }
+        });
+    }
+    private void fetchNowPlayingFromApi(MovieRepository repository) {
+        repository.fetchNowPlayingMoviesFromApi();
     }
 
     private void getTrendingVideos() {
@@ -131,17 +269,29 @@ public class HomeActivity extends AppCompatActivity {
                 .create(ApiServices.class);
 
         // Assuming you have a MovieDao setup for Room DB
-        MovieRepository repository = new MovieRepository(apiService);
+        MovieRepository repository = new MovieRepository(getApplicationContext(),apiService);
 
 
         // Create an instance of MoviewViewModel using the custom factory
         MoviewViewModelFactory factory = new MoviewViewModelFactory(repository);
         viewModel = new ViewModelProvider(this, factory).get(MoviewViewModel.class);
+
+
         viewModel.getTrendingMovies().observe(this, movies -> {
-            if (movies != null) {
+            if (movies != null && !movies.isEmpty()) {
+                // Show movies from the local database
                 trendingMoviewAdapter.setMovies(movies);
                 trendingMovies = movies;
+            } else {
+                // If no data in the database, fetch from API
+                fetchTrendingFromApi(repository);
             }
         });
     }
+
+    private void fetchTrendingFromApi(MovieRepository repository) {
+        repository.fetchTrendingMoviesFromApi();
+    }
+
+
 }

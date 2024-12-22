@@ -52,5 +52,19 @@
             android:textSize="16sp"
             android:paddingBottom="8dp"
             android:textColor="#666" />
+
+        <Button
+            android:id="@+id/bookmarkButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Bookmark" />
+
+        <ImageView
+            android:id="@+id/share"
+            android:layout_width="20sp"
+            android:layout_height="20sp"
+            android:src="@drawable/share">
+
+        </ImageView>
     </LinearLayout>
 </ScrollView>

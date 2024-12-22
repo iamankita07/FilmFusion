@@ -4,6 +4,7 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
 
+
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -15,9 +16,31 @@
         android:theme="@style/Theme.FilmFusion"
         tools:targetApi="31">
         <activity
-            android:name=".MovieDetailPage"
+            android:name=".WishListActivity"
             android:exported="false"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
+<!--        <activity-->
+<!--            android:name=".MovieDetailPage"-->
+<!--            android:exported="false"-->
+<!--            android:theme="@style/Theme.AppCompat.Light.NoActionBar"-->
+<!--        <intent-filter>-->
+<!--            <action android:name="android.intent.action.VIEW" />-->
+<!--            <category android:name="android.intent.category.DEFAULT" />-->
+<!--            <category android:name="android.intent.category.BROWSABLE" />-->
+<!--            <data android:scheme="filmfusion" android:host="movie" />-->
+<!--        </intent-filter>/>-->
+
+        <activity android:name=".MovieDetailPage"
+            android:exported="true"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="filmfusion" android:host="movie" />
+            </intent-filter>
+        </activity>
+
         <activity
             android:name=".HomeActivity"
             android:exported="true"

@@ -13,6 +13,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.example.filmfusion.BookMarkMovies;
 import com.example.filmfusion.MovieDetailPage;
 import com.example.filmfusion.R;
 import com.example.filmfusion.models.NowPlayingModel;
@@ -23,12 +24,17 @@ import java.util.List;
 public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHolder> {
     private List<NowPlayingModel> movies = new ArrayList<>();
     static  OnItemClickListener clickListener;
+    private List<BookMarkMovies> movieList;
 
 
 
     public void setMovies(List<NowPlayingModel> movies) {
         this.movies = movies;
         notifyDataSetChanged();
+    }
+
+    public MovieAdapter(List<BookMarkMovies> movieList) {
+        this.movieList = movieList;
     }
 
     @NonNull

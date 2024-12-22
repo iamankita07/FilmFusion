@@ -1,12 +1,17 @@
 package com.example.filmfusion.models;
 
 import androidx.room.Entity;
+import androidx.room.PrimaryKey;
 
+import com.example.filmfusion.BookMarkMovies;
 import com.google.gson.annotations.SerializedName;
 import java.util.List;
 
-@Entity(tableName = "movies")
-public class TrendingMovieModel {
+@Entity(tableName = "trending_movies")
+public class TrendingMovieModel  implements BookMarkMovies {
+
+    @PrimaryKey(autoGenerate = true)
+    private int ids;
 
     @SerializedName("adult")
     private boolean adult;
@@ -14,7 +19,7 @@ public class TrendingMovieModel {
     @SerializedName("backdrop_path")
     private String backdropPath;
 
-
+    private boolean isBookmarked= false;
 
     @SerializedName("id")
     private int id;
@@ -50,6 +55,22 @@ public class TrendingMovieModel {
     private int voteCount;
 
     // Getters and Setters
+
+    public int getIds() {
+        return ids;
+    }
+
+    public boolean isBookmarked() {
+        return isBookmarked;
+    }
+
+    public void setBookmarked(boolean bookmarked) {
+        isBookmarked = bookmarked;
+    }
+
+    public void setIds(int ids) {
+        this.ids = ids;
+    }
 
     public boolean isAdult() {
         return adult;
@@ -110,6 +131,11 @@ public class TrendingMovieModel {
 
     public String getPosterPath() {
         return posterPath;
+    }
+
+    @Override
+    public String getType() {
+        return "Trending_Movie";
     }
 
     public void setPosterPath(String posterPath) {
