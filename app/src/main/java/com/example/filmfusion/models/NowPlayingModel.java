@@ -7,7 +7,7 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
-@Entity(tableName = "movies")
+@Entity(tableName = "now_playing_movies")
 public class NowPlayingModel {
     @PrimaryKey
     private int id;
@@ -18,8 +18,7 @@ public class NowPlayingModel {
     @SerializedName("backdrop_path")
     private String backdropPath;
 
-    @SerializedName("genre_ids")
-    private List<Integer> genreIds;
+
 
     @SerializedName("original_language")
     private String originalLanguage;
@@ -76,13 +75,6 @@ public class NowPlayingModel {
         this.backdropPath = backdropPath;
     }
 
-    public List<Integer> getGenreIds() {
-        return genreIds;
-    }
-
-    public void setGenreIds(List<Integer> genreIds) {
-        this.genreIds = genreIds;
-    }
 
     public String getOriginalLanguage() {
         return originalLanguage;

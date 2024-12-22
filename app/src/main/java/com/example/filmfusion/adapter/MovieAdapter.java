@@ -42,6 +42,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
     public void onBindViewHolder(@NonNull MovieViewHolder holder, int position) {
         NowPlayingModel movie = movies.get(position);
         holder.bind(movie);
+
     }
 
 

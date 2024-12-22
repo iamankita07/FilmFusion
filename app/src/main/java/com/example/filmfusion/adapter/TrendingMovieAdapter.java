@@ -19,7 +19,7 @@ import java.util.List;
 
 public class TrendingMovieAdapter extends RecyclerView.Adapter<TrendingMovieAdapter.MovieViewHolder> {
     private List<TrendingMovieModel> movies = new ArrayList<>();
-    static MovieAdapter.OnItemClickListener clickListener;
+    static OnItemClickListener clickListener;
 
     public void setMovies(List<TrendingMovieModel> movies) {
         this.movies = movies;
@@ -39,8 +39,13 @@ public class TrendingMovieAdapter extends RecyclerView.Adapter<TrendingMovieAdap
         holder.bind(movie);
     }
 
-    public void SetOnItemClickListener(MovieAdapter.OnItemClickListener itemClickListener) {
+
+    public void SetOnItemClickListener(OnItemClickListener itemClickListener) {
         this.clickListener = itemClickListener;
+    }
+
+    public interface OnItemClickListener {
+        void onItemClick(View view, int position);
     }
 
     @Override
@@ -56,6 +61,7 @@ public class TrendingMovieAdapter extends RecyclerView.Adapter<TrendingMovieAdap
             super(itemView);
             title = itemView.findViewById(R.id.movie_title);
             poster = itemView.findViewById(R.id.movie_poster);
+            itemView.setOnClickListener(this);
         }
 
         public void bind(TrendingMovieModel movie) {

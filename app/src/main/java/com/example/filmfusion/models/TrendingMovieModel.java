@@ -14,8 +14,7 @@ public class TrendingMovieModel {
     @SerializedName("backdrop_path")
     private String backdropPath;
 
-    @SerializedName("genre_ids")
-    private List<Integer> genreIds;
+
 
     @SerializedName("id")
     private int id;
@@ -68,13 +67,6 @@ public class TrendingMovieModel {
         this.backdropPath = backdropPath;
     }
 
-    public List<Integer> getGenreIds() {
-        return genreIds;
-    }
-
-    public void setGenreIds(List<Integer> genreIds) {
-        this.genreIds = genreIds;
-    }
 
     public int getId() {
         return id;

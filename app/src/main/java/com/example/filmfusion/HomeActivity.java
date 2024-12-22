@@ -21,7 +21,11 @@ import com.example.filmfusion.adapter.TrendingMovieAdapter;
 import com.example.filmfusion.models.ApiServices;
 import com.example.filmfusion.models.MoviewViewModel;
 import com.example.filmfusion.models.MoviewViewModelFactory;
+import com.example.filmfusion.models.NowPlayingModel;
+import com.example.filmfusion.models.TrendingMovieModel;
 import com.example.filmfusion.repository.MovieRepository;
+
+import java.util.List;
 
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
@@ -31,6 +35,8 @@ public class HomeActivity extends AppCompatActivity {
     RecyclerView recycler_now_playing, recycler_trending;
     private MoviewViewModel viewModel;
     private MovieAdapter adapter;
+    private List<NowPlayingModel> nowPlayingMovies;
+    private List<TrendingMovieModel> trendingMovies;
 
     private TrendingMovieAdapter trendingMoviewAdapter;
 
@@ -63,15 +69,29 @@ public class HomeActivity extends AppCompatActivity {
         adapter.SetOnItemClickListener(new MovieAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
+                NowPlayingModel movies = nowPlayingMovies.get(position);
                 Intent intent = new Intent(HomeActivity.this, MovieDetailPage.class);
+                intent.putExtra("originalTitle",movies.getOriginalTitle());
+                intent.putExtra("overview", movies.getOverview());
+                intent.putExtra("posterPath", movies.getPosterPath());
+                intent.putExtra("releaseDate", movies.getReleaseDate());
+                intent.putExtra("voteAverage", movies.getVoteAverage());
+                intent.putExtra("id", movies.getId());
                 startActivity(intent);
             }
         });
 
-        trendingMoviewAdapter.SetOnItemClickListener(new MovieAdapter.OnItemClickListener() {
+        trendingMoviewAdapter.SetOnItemClickListener(new TrendingMovieAdapter .OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
+                TrendingMovieModel trendingMovieModel = trendingMovies.get(position);
                 Intent intent = new Intent(HomeActivity.this, MovieDetailPage.class);
+                intent.putExtra("originalTitle",trendingMovieModel.getOriginalTitle());
+                intent.putExtra("overview", trendingMovieModel.getOverview());
+                intent.putExtra("posterPath", trendingMovieModel.getPosterPath());
+                intent.putExtra("releaseDate", trendingMovieModel.getReleaseDate());
+                intent.putExtra("voteAverage", trendingMovieModel.getVoteAverage());
+                intent.putExtra("id", trendingMovieModel.getId());
                 startActivity(intent);
             }
         });
@@ -98,6 +118,7 @@ public class HomeActivity extends AppCompatActivity {
         viewModel.getNowPlayingMovies().observe(this, movies -> {
             if (movies != null) {
                 adapter.setMovies(movies);
+                nowPlayingMovies = movies;
             }
         });
     }
@@ -119,6 +140,7 @@ public class HomeActivity extends AppCompatActivity {
         viewModel.getTrendingMovies().observe(this, movies -> {
             if (movies != null) {
                 trendingMoviewAdapter.setMovies(movies);
+                trendingMovies = movies;
             }
         });
     }

@@ -31,6 +31,7 @@ public class MovieRepository {
             public void onResponse(Call<NowPlayingMovieResponse> call, Response<NowPlayingMovieResponse> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     liveData.setValue(response.body().getResults());
+
                 }
             }
 
