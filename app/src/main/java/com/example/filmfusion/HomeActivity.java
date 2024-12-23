@@ -55,20 +55,12 @@ public class HomeActivity extends AppCompatActivity {
 
     private TrendingMovieAdapter trendingMoviewAdapter;
     private List<CombineMovies> combinedMoviesList = new ArrayList<>();
-
     private SearchAdapter movieAdapter;
-
     TextView wishList;
     private EditText searchBar;
-    private List<NowPlayingModel> filteredNowPlayingMovies = new ArrayList<>();
-    private List<TrendingMovieModel> filteredTrendingMovies = new ArrayList<>();
-
     LinearLayout search_layout, main_layout;
-
     RecyclerView searchRecycler_view;
-
     TextView noResultsTextView;
-
     Context context;
 
     @Override
@@ -139,8 +131,6 @@ public class HomeActivity extends AppCompatActivity {
         search_layout.setVisibility(View.GONE);
         searchBar = findViewById(R.id.searchBar);
         noResultsTextView=findViewById(R.id.noResultsTextView);
-
-
         recycler_now_playing.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
         recycler_trending.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
         GridLayoutManager layoutManager = new GridLayoutManager(this, 2); // 2 items per row
@@ -206,22 +196,16 @@ public class HomeActivity extends AppCompatActivity {
                 .build()
                 .create(ApiServices.class);
 
-        // Assuming you have a MovieDao setup for Room DB
         MovieRepository repository = new MovieRepository(getApplicationContext(),apiService);
-
-
-        // Create an instance of MoviewViewModel using the custom factory
         MoviewViewModelFactory factory = new MoviewViewModelFactory(repository);
         viewModel = new ViewModelProvider(this, factory).get(MoviewViewModel.class);
 
 
         viewModel.getNowPlayingMovies().observe(this, movies -> {
             if (movies != null && !movies.isEmpty()) {
-                // Show movies from the local database
                 adapter.setMovies(movies);
                 nowPlayingMovies = movies;
             } else {
-                // If no data in the database, fetch from API
                 fetchNowPlayingFromApi(repository);
             }
         });
@@ -238,7 +222,6 @@ public class HomeActivity extends AppCompatActivity {
         MoviewViewModelFactory factory = new MoviewViewModelFactory(repository);
         viewModel = new ViewModelProvider(this, factory).get(MoviewViewModel.class);
 
-        // Observe Now Playing and Trending movies
         viewModel.getNowPlayingMovies().observe(this, nowPlayingMovies -> {
             if (nowPlayingMovies != null) {
                 for (NowPlayingModel movie : nowPlayingMovies) {
@@ -268,22 +251,16 @@ public class HomeActivity extends AppCompatActivity {
                 .build()
                 .create(ApiServices.class);
 
-        // Assuming you have a MovieDao setup for Room DB
         MovieRepository repository = new MovieRepository(getApplicationContext(),apiService);
-
-
-        // Create an instance of MoviewViewModel using the custom factory
         MoviewViewModelFactory factory = new MoviewViewModelFactory(repository);
         viewModel = new ViewModelProvider(this, factory).get(MoviewViewModel.class);
 
 
         viewModel.getTrendingMovies().observe(this, movies -> {
             if (movies != null && !movies.isEmpty()) {
-                // Show movies from the local database
                 trendingMoviewAdapter.setMovies(movies);
                 trendingMovies = movies;
             } else {
-                // If no data in the database, fetch from API
                 fetchTrendingFromApi(repository);
             }
         });
@@ -292,6 +269,5 @@ public class HomeActivity extends AppCompatActivity {
     private void fetchTrendingFromApi(MovieRepository repository) {
         repository.fetchTrendingMoviesFromApi();
     }
-
 
 }

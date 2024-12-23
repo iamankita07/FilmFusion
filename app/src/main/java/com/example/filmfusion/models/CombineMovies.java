@@ -4,7 +4,7 @@ package com.example.filmfusion.models;
 public class CombineMovies {
     private int id;
     private String title;
-    private String source; // Indicates whether the movie is from "Now Playing" or "Trending"
+    private String source;
 
     public CombineMovies(int id, String title, String source) {
         this.id = id;

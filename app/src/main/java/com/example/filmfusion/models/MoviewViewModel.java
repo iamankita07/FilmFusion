@@ -19,7 +19,6 @@ public class MoviewViewModel extends ViewModel {
         this.repository = repository;
     }
 
-    // Expose Local Database LiveData
     public LiveData<List<NowPlayingModel>> getNowPlayingMovies() {
         return repository.getNowPlayingMovies();
     }
@@ -28,7 +27,6 @@ public class MoviewViewModel extends ViewModel {
         return repository.getTrendingMovies();
     }
 
-    // Trigger API fetch if needed
     public void fetchMoviesFromApi() {
         repository.fetchNowPlayingMoviesFromApi();
     }

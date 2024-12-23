@@ -36,7 +36,6 @@ public class MovieRepository {
 
     }
 
-
     public LiveData<List<NowPlayingModel>> getNowPlayingMovies() {
         return db.nowPlayingDao().getAllMovies();
     }
@@ -67,7 +66,7 @@ public class MovieRepository {
         return db.trendingMovieDao().getAllMovies();
     }
 
-    // Fetch Now Playing Movies from API and save to database
+    // Fetch Trending Movies from API and save to database
     public void fetchTrendingMoviesFromApi() {
         apiService.getTrendingMovies(apiKey, 1).enqueue(new Callback<TrendingMovieResponse>() {
             @Override
@@ -106,7 +105,6 @@ public class MovieRepository {
     public LiveData<List<TrendingMovieModel>> getBookmarkedTrendingMovies() {
         return db.trendingMovieDao().getBookmarkedMovies();
     }
-
     public LiveData<List<NowPlayingModel>> removeBookmarkNowPlaying(int movieId) {
         ExecutorService executor = Executors.newSingleThreadExecutor();
         executor.execute(() -> {
@@ -126,8 +124,6 @@ public class MovieRepository {
 
         return null;
     }
-
-
     public LiveData<List<CombineMovies>> searchLocalMovies(String query) {
         MutableLiveData<List<CombineMovies>> liveData = new MutableLiveData<>();
         ExecutorService executor = Executors.newSingleThreadExecutor();

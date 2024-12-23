@@ -34,7 +34,7 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.MovieViewH
     public SearchAdapter( Context context,List<CombineMovies> movieList) {
         this.movieList = movieList;
         this.context=context;
-        db = DatabaseClient.getInstance(context).getAppDatabase();  // Initialize the database
+        db = DatabaseClient.getInstance(context).getAppDatabase();
 
     }
     public void setMovies(List<CombineMovies> movies) {
@@ -50,15 +50,12 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.MovieViewH
         return new MovieViewHolder(view);
     }
 
-
-
     @Override
     public void onBindViewHolder(MovieViewHolder holder, int position) {
         CombineMovies movie = movieList.get(position);
         holder.titleTextView.setText(movie.getTitle());
 
     }
-
 
     @Override
     public int getItemCount() {

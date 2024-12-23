@@ -54,11 +54,8 @@ public class MovieDetailPage extends AppCompatActivity {
         if (data != null && data.getScheme().equals("filmfusion") && data.getHost().equals("movie")) {
             String movieIdString = data.getLastPathSegment();
             int movieIdFromLink = Integer.parseInt(movieIdString);
-
-            // Use the extracted movie ID to fetch the movie details (or show it if it's already available)
             loadMovieDetails(movieIdFromLink);
         } else {
-            // Normal data retrieval (intent from other activities)
             movieId = getIntent().getIntExtra("id", -1);
             loadMovieDetails(movieId);
         }
@@ -84,22 +81,16 @@ public class MovieDetailPage extends AppCompatActivity {
 
         MoviewViewModelFactory factory = new MoviewViewModelFactory(repository);
         viewModel = new ViewModelProvider(this, factory).get(MoviewViewModel.class);
-
-        // Retrieve data from Intent
         originalTitle = getIntent().getStringExtra("originalTitle");
         String overview = getIntent().getStringExtra("overview");
         String posterPath = getIntent().getStringExtra("posterPath");
         String releaseDate = getIntent().getStringExtra("releaseDate");
         movieId= getIntent().getIntExtra("id", -1);
         double voteAverage = getIntent().getDoubleExtra("voteAverage", 0.0);
-
-        // Set data to UI elements
         titleTextView.setText(originalTitle);
         overviewTextView.setText(overview);
         releaseDateTextView.setText("Release Date: " + releaseDate);
         voteAverageTextView.setText("Rating: " + voteAverage);
-
-        // Load poster image using Glide
         Glide.with(this)
                 .load("https://image.tmdb.org/t/p/w500/" + posterPath) // Full URL for poster image
                 .into(posterImageView);
@@ -150,20 +141,7 @@ public class MovieDetailPage extends AppCompatActivity {
     }
 
     private void shareMovie() {
-//        String shareMessage = "Check out this movie: " + originalTitle + "\n"
-//                 + "\n" +
-//                "Watch it here: filmfusion://movie/" + movieId;
-//
-//        // Create the intent to share the movie details
-//        Intent shareIntent = new Intent(Intent.ACTION_SEND);
-//        shareIntent.setType("text/plain");
-//        shareIntent.putExtra(Intent.EXTRA_TEXT, shareMessage);
-//
-//        // Start the sharing activity
-//        startActivity(Intent.createChooser(shareIntent, "Share movie via"));
-
         String webUrl = "http://www.filmfusion.com/movie/" + movieId; // Web URL (if you have a web version)
-
         Intent sendIntent = new Intent();
         sendIntent.setAction(Intent.ACTION_SEND);
         sendIntent.putExtra(Intent.EXTRA_TEXT, webUrl);
@@ -186,12 +164,10 @@ public class MovieDetailPage extends AppCompatActivity {
 
     private void loadMovieDetails(int movieId) {
         if (movieId == -1) {
-            // Handle the case where the movie ID is invalid or not passed
             Toast.makeText(this, "Movie not found", Toast.LENGTH_SHORT).show();
-            finish(); // Optionally finish the activity
+            finish();
         } else {
             Toast.makeText(this, "movie found", Toast.LENGTH_SHORT).show();
-            // Continue with loading movie details
         }
     }
 

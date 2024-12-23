@@ -12,7 +12,6 @@ public class DatabaseClient {
     private Context mCtx;
     private static DatabaseClient mInstance;
 
-    //our app database object
     private AppDatabase appDatabase;
 
     private DatabaseClient(Context mCtx) {

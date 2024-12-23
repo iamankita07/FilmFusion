@@ -45,8 +45,6 @@ public class WishListAdapter extends RecyclerView.Adapter<WishListAdapter.MovieV
         return new MovieViewHolder(view);
     }
 
-
-
     @Override
     public void onBindViewHolder(MovieViewHolder holder, int position) {
         BookMarkMovies movie = movieList.get(position);
@@ -69,9 +67,9 @@ public class WishListAdapter extends RecyclerView.Adapter<WishListAdapter.MovieV
         ExecutorService executor = Executors.newSingleThreadExecutor();
         executor.execute(() -> {
             if (movie.getType().equalsIgnoreCase("Now_Playing")) {
-                db.nowPlayingDao().removeBookmark(movie.getId()); // Remove from NowPlaying database
+                db.nowPlayingDao().removeBookmark(movie.getId());
             } else if (movie.getType().equalsIgnoreCase("Trending_Movie")) {
-                db.trendingMovieDao().removeBookmark(movie.getId());// Remove from Trending database
+                db.trendingMovieDao().removeBookmark(movie.getId());
             }
 
             // Remove from the local list (UI update)
