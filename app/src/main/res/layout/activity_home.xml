@@ -5,34 +5,62 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/backgroundColor"
     android:orientation="vertical">
 
 
-    <TextView
+    <ImageView
         android:id="@+id/wishList"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
         android:text="WishList"
         android:textStyle="bold"
-        android:padding="10dp"
+        android:paddingEnd="10dp"
+        android:paddingTop="10dp"
+        android:src="@drawable/wishlist"
         android:layout_gravity="right">
 
-    </TextView>
+    </ImageView>
 
-    <EditText
-        android:id="@+id/searchBar"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Search movies..."
-        android:padding="12dp"
-        android:layout_margin="8dp"
-        android:drawablePadding="8dp"
-        android:inputType="text" />
+        android:layout_height="50dp"
+        android:layout_marginHorizontal="20dp"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/rounded_background"
+        android:orientation="horizontal"
+        android:padding="8dp"
+        android:elevation="4dp">
+
+        <!-- Search Icon -->
+        <ImageView
+            android:id="@+id/searchBaricon"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_gravity="center_vertical"
+            android:src="@drawable/search_iconn" />
+
+        <!-- Search Input -->
+        <EditText
+            android:id="@+id/searchBar"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@android:color/transparent"
+            android:hint="Search movies..."
+            android:paddingStart="8dp"
+            android:paddingEnd="8dp"
+            android:textColor="@color/black"
+            android:textColorHint="@color/gray"
+            android:textSize="16sp" />
+
+    </LinearLayout>
 
     <LinearLayout
         android:id="@+id/main_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@color/backgroundColor"
         android:visibility="visible"
         android:orientation="horizontal">
 
@@ -46,13 +74,13 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="16dp">
+            android:padding="10dp">
 
             <TextView
                 android:id="@+id/now_playing_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="18sp"
+                android:textSize="20sp"
                 android:textColor="@color/black"
                 android:textStyle="bold"
                 android:text="Now Playing Movies"
@@ -73,7 +101,7 @@
                 android:layout_height="wrap_content"
                 android:text="Trending Movies"
                 android:layout_marginTop="30dp"
-                android:textSize="18sp"
+                android:textSize="20sp"
                 android:textColor="@color/black"
                 android:textStyle="bold"
                 android:textAppearance="?attr/textAppearanceHeadline6"

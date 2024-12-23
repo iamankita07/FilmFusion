@@ -135,11 +135,11 @@ public class MovieRepository {
             List<CombineMovies> combinedMovies = new ArrayList<>();
 
             for (NowPlayingModel movie : nowPlayingMovies) {
-                combinedMovies.add(new CombineMovies(movie.getId(), movie.getTitle(), "Now Playing"));
+                combinedMovies.add(new CombineMovies(movie.getId(), movie.getTitle(), "Now Playing", movie.getPosterPath(), movie.getOverview(),movie.getReleaseDate(),movie.getPopularity(),movie.getVoteAverage()));
             }
 
             for (TrendingMovieModel movie : trendingMovies) {
-                combinedMovies.add(new CombineMovies(movie.getId(), movie.getTitle(), "Trending"));
+                combinedMovies.add(new CombineMovies(movie.getId(), movie.getTitle(), "Trending", movie.getPosterPath(), movie.getOverview(),movie.getReleaseDate(),movie.getPopularity(),movie.getVoteAverage()));
             }
 
             liveData.postValue(combinedMovies);

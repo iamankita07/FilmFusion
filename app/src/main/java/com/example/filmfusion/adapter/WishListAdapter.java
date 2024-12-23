@@ -28,6 +28,8 @@ public class WishListAdapter extends RecyclerView.Adapter<WishListAdapter.MovieV
     private List<BookMarkMovies> movieList;
     Context context;
     private MovieRepository movieRepository;
+    static OnItemClickListener clickListener;
+
     private AppDatabase db;
 
     public WishListAdapter( Context context,List<BookMarkMovies> movieList) {
@@ -82,18 +84,33 @@ public class WishListAdapter extends RecyclerView.Adapter<WishListAdapter.MovieV
     public int getItemCount() {
         return movieList.size();
     }
+    public void SetOnItemClickListener(WishListAdapter.OnItemClickListener itemClickListener) {
+        this.clickListener = itemClickListener;
+    }
 
-    public class MovieViewHolder extends RecyclerView.ViewHolder {
+    public interface OnItemClickListener {
+        void onItemClick(View view, int position);
+    }
+
+    public class MovieViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         TextView titleTextView;
         ImageView posterImageView;
 
         Button removeButton;
+
+
 
         public MovieViewHolder(View itemView) {
             super(itemView);
             titleTextView = itemView.findViewById(R.id.movie_title);
             posterImageView = itemView.findViewById(R.id.movie_poster);
             removeButton= itemView.findViewById(R.id.removeButton);
+            itemView.setOnClickListener(this);
+        }
+
+        @Override
+        public void onClick(View view) {
+            clickListener.onItemClick(view, getPosition());
         }
     }
 }

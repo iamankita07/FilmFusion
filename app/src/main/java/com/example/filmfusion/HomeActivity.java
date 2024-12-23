@@ -9,6 +9,7 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -56,7 +57,7 @@ public class HomeActivity extends AppCompatActivity {
     private TrendingMovieAdapter trendingMoviewAdapter;
     private List<CombineMovies> combinedMoviesList = new ArrayList<>();
     private SearchAdapter movieAdapter;
-    TextView wishList;
+    ImageView wishList;
     private EditText searchBar;
     LinearLayout search_layout, main_layout;
     RecyclerView searchRecycler_view;
@@ -159,6 +160,7 @@ public class HomeActivity extends AppCompatActivity {
                 intent.putExtra("posterPath", movies.getPosterPath());
                 intent.putExtra("releaseDate", movies.getReleaseDate());
                 intent.putExtra("voteAverage", movies.getVoteAverage());
+                intent.putExtra("backdropPath",movies.getBackdropPath());
                 intent.putExtra("id", movies.getId());
                 startActivity(intent);
             }
@@ -175,6 +177,8 @@ public class HomeActivity extends AppCompatActivity {
                 intent.putExtra("releaseDate", trendingMovieModel.getReleaseDate());
                 intent.putExtra("voteAverage", trendingMovieModel.getVoteAverage());
                 intent.putExtra("id", trendingMovieModel.getId());
+                intent.putExtra("backdropPath",trendingMovieModel.getBackdropPath());
+
                 startActivity(intent);
             }
         });
@@ -225,7 +229,7 @@ public class HomeActivity extends AppCompatActivity {
         viewModel.getNowPlayingMovies().observe(this, nowPlayingMovies -> {
             if (nowPlayingMovies != null) {
                 for (NowPlayingModel movie : nowPlayingMovies) {
-                    combinedMoviesList.add(new CombineMovies(movie.getId(), movie.getTitle(), "Now Playing"));
+                    combinedMoviesList.add(new CombineMovies(movie.getId(), movie.getTitle(), "Now Playing", movie.getPosterPath(), movie.getOverview(),movie.getReleaseDate(),movie.getPopularity(),movie.getVoteAverage()));
                 }
                 movieAdapter.setMovies(combinedMoviesList);
             }
@@ -234,7 +238,7 @@ public class HomeActivity extends AppCompatActivity {
         viewModel.getTrendingMovies().observe(this, trendingMovies -> {
             if (trendingMovies != null) {
                 for (TrendingMovieModel movie : trendingMovies) {
-                    combinedMoviesList.add(new CombineMovies(movie.getId(), movie.getTitle(), "Trending"));
+                    combinedMoviesList.add(new CombineMovies(movie.getId(), movie.getTitle(), "Trending", movie.getPosterPath(), movie.getOverview(),movie.getReleaseDate(),movie.getPopularity(),movie.getVoteAverage()));
                 }
                 movieAdapter.setMovies(combinedMoviesList);
             }

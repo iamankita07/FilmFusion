@@ -33,7 +33,7 @@ public class MovieDetailPage extends AppCompatActivity {
     private TextView titleTextView, overviewTextView, releaseDateTextView, voteAverageTextView;
     private ImageView posterImageView;
     Button bookmarkButton;
-    ImageView share;
+    ImageView share,back_button;
 
     private MoviewViewModel viewModel;
 
@@ -49,7 +49,6 @@ public class MovieDetailPage extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_movie_detail_page);
         assignId();
-        // Extract movie ID from the deep link (if it exists)
         Uri data = getIntent().getData();
         if (data != null && data.getScheme().equals("filmfusion") && data.getHost().equals("movie")) {
             String movieIdString = data.getLastPathSegment();
@@ -70,6 +69,7 @@ public class MovieDetailPage extends AppCompatActivity {
         voteAverageTextView = findViewById(R.id.movieVoteAverage);
         posterImageView = findViewById(R.id.moviePoster);
         bookmarkButton = findViewById(R.id.bookmarkButton);
+        back_button=findViewById(R.id.back_button);
         share= findViewById(R.id.share);
         db= DatabaseClient.getInstance(this).getAppDatabase();
         ApiServices apiService = new Retrofit.Builder()
@@ -85,6 +85,7 @@ public class MovieDetailPage extends AppCompatActivity {
         String overview = getIntent().getStringExtra("overview");
         String posterPath = getIntent().getStringExtra("posterPath");
         String releaseDate = getIntent().getStringExtra("releaseDate");
+        String backdropPath= getIntent().getStringExtra("backdropPath");
         movieId= getIntent().getIntExtra("id", -1);
         double voteAverage = getIntent().getDoubleExtra("voteAverage", 0.0);
         titleTextView.setText(originalTitle);
@@ -92,7 +93,7 @@ public class MovieDetailPage extends AppCompatActivity {
         releaseDateTextView.setText("Release Date: " + releaseDate);
         voteAverageTextView.setText("Rating: " + voteAverage);
         Glide.with(this)
-                .load("https://image.tmdb.org/t/p/w500/" + posterPath) // Full URL for poster image
+                .load("https://image.tmdb.org/t/p/w500/" + backdropPath) // Full URL for poster image
                 .into(posterImageView);
 
         ExecutorService executor = Executors.newSingleThreadExecutor();
@@ -138,6 +139,14 @@ public class MovieDetailPage extends AppCompatActivity {
                shareMovie();
            }
        });
+
+        back_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent= new Intent(MovieDetailPage.this, HomeActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 
     private void shareMovie() {
@@ -154,20 +163,22 @@ public class MovieDetailPage extends AppCompatActivity {
     private void updateBookmarkUI(boolean isBookmarked) {
 
         if (isBookmarked) {
-            bookmarkButton.setText("Remove Bookmark"); // Example text
-            bookmarkButton.setBackgroundColor(Color.RED); // Example styling
+            bookmarkButton.setText("Remove Bookmark");
+            bookmarkButton.setBackgroundColor(Color.BLUE);
+            bookmarkButton.setBackgroundResource(R.drawable.rounded_button_background);
         } else {
             bookmarkButton.setText("Add Bookmark");
-            bookmarkButton.setBackgroundColor(Color.GREEN);
+            bookmarkButton.setBackgroundColor(Color.BLUE);
+            bookmarkButton.setBackgroundResource(R.drawable.rounded_button_background);
         }
     }
 
     private void loadMovieDetails(int movieId) {
         if (movieId == -1) {
-            Toast.makeText(this, "Movie not found", Toast.LENGTH_SHORT).show();
+            //Toast.makeText(this, "Movie not found", Toast.LENGTH_SHORT).show();
             finish();
         } else {
-            Toast.makeText(this, "movie found", Toast.LENGTH_SHORT).show();
+            //Toast.makeText(this, "movie found", Toast.LENGTH_SHORT).show();
         }
     }
 

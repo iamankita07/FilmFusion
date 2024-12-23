@@ -6,5 +6,10 @@ public interface BookMarkMovies {
     String getPosterPath();
 
     String getType();
+    String getOverview();
+    String getReleaseDate();
+    double getVoteAverage();
+    String getBackdropPath();
+    String getOriginalTitle();
 
 }
